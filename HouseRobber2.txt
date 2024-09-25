@@ -1,0 +1,99 @@
+Q. 213
+
+Top-bottom
+class Solution {
+public:
+vector<int>dp1,dp2;
+int f(vector<int>& nums,vector<int>&dp,int i)
+{
+    if(i==nums.size()-1) return nums[i];
+    if(i==nums.size()-2) return max(nums[i],nums[i+1]);
+    if(dp[i]!=-1) return dp[i];
+    return dp[i]=max(nums[i]+f(nums,dp,i+2),(0+f(nums,dp,i+1)));
+}
+    int rob(vector<int>& nums) {
+        dp1.resize(nums.size(),-1);
+         dp2.resize(nums.size(),-1);
+         if(nums.size()==1) return nums[0];
+        vector<int>temp1,temp2;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(i!=0) temp1.push_back(nums[i]);
+            if(i!=nums.size()-1) temp2.push_back(nums[i]);
+        }
+       return max(f(temp1,dp1,0),f(temp2,dp2,0));
+    }
+};
+
+
+Bottom to top approach
+class Solution {
+public:
+int f(vector<int>& nums,vector<int>&dp)
+{
+    if(nums.size()==1) return nums[nums.size()-1];
+    if(nums.size()==2) return max(nums[nums.size()-1],nums[nums.size()-2]);
+    dp[nums.size()-1]=nums[nums.size()-1];
+    dp[nums.size()-2]=max(nums[nums.size()-1],nums[nums.size()-2]);
+    for(int i=nums.size()-3;i>=0;i--)
+    {
+        dp[i]=max(nums[i]+dp[i+2],dp[i+1]);
+    }
+    return dp[0];
+}
+    int rob(vector<int>& nums) {
+        int n=nums.size();
+        if(n==1) return nums[0];
+        vector<int>dp;
+        dp.resize(nums.size(),-1);
+        vector<int>temp1(nums.begin()+1,nums.end());
+        vector<int>temp2(nums.begin(),nums.end()-1);
+        return max(f(temp1,dp),f(temp2,dp));
+    }
+};
+
+
+
+Constant space
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        if(nums.size()==3) return max(max(nums[0],nums[1]),(nums[1],nums[2]));
+         int n=nums.size();
+          int maximum=max(nums[n-1],nums[n-2]);
+                cout<<maximum<<" ";
+                int a=nums[n-1];
+                int b=maximum;
+                for(int i=n-3;i>=1;i--)
+                {
+                    if(nums[i]+a>b)
+                    {
+                        int c=b;
+                        b=a+nums[i];
+                        a=c;
+                    }
+                    else{
+                        a=b;
+                    }
+                }
+                int max1=b;
+                a=nums[n-2];
+                maximum=max(nums[n-2],nums[n-3]);
+                b=maximum;
+              for(int i=n-4;i>=0;i--)
+                {
+                    if(nums[i]+a>b)
+                    {
+                        int c=b;
+                        b=a+nums[i];
+                        a=c;
+                    }
+                    else{
+                        a=b;
+                    }
+                }
+                return max(max1,b);
+    }
+};
