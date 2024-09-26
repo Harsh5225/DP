@@ -1,0 +1,60 @@
+💡Applications
+1.Data Sorting and Merging: Use LIS for efficient merging or sorting of datasets where only a few out-of-order elements exist.
+2.Gaming/Leaderboard Ranking: Determine longest streaks of increasing scores or achievements over time.
+
+I will later update the question solution which is more optimised with the help of binary search . TC(nlogn)
+
+
+O(n^2)
+top to  bottom approach
+
+int lis(int prev,int index,int a[],vector<vector<int>>&dp,int n)
+    {
+        if(index>=n) return 0;
+        int take=0;
+        if(prev!=-1 && dp[index][prev]!=-1) return dp[index][prev];
+        if(prev==-1 || a[prev]<a[index])
+        {
+            take=1+lis(index,index+1,a,dp,n);
+        }
+        int skip=lis(prev,index+1,a,dp,n);
+        if(prev!=-1)
+        return dp[index][prev]=max(take,skip);
+        else return max(take,skip);
+    }
+    int longestSubsequence(int n, int a[])
+    {
+       // your code here
+       vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
+       return lis(-1,0,a,dp,n);
+       
+    }
+
+
+
+
+Bottom top approach
+   int longestSubsequence(int n, int nums[])
+    {
+       // your code here
+       vector<int>t(n,1);
+       int maxLcs=1;
+       for(int i=0;i<n;i++)
+       {
+           for(int j=0;j<i;j++ )
+           {
+               if(nums[i]>nums[j])
+               {
+                   t[i]=max(t[i],t[j]+1);
+                   maxLcs=max(maxLcs,t[i]);
+               }
+           }
+       }
+       return maxLcs;
+    }
+
+
+# Dynamic Programming (DP): Use DP to store the LIS length at each index, reducing recomputation.
+# Subproblem Identification: Check if the current element can extend a previous subsequence (i.e., nums[i] > nums[j]).
+# Initialization: Start with LIS length 1 for each element.  [State definition]
+# Optimization: Use nested loops to find the longest subsequence ending at each index.
