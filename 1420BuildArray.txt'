@@ -1,0 +1,48 @@
+// Hard LIS variant
+You are given three integers n, m and k. Consider the following algorithm to find the maximum element of an array of positive integers:
+You can look algorithm on leetcode .
+
+You should build the array arr which has the following properties:
+
+arr has exactly n integers.
+1 <= arr[i] <= m where (0 <= i < n).
+After applying the mentioned algorithm to arr, the value search_cost is equal to k.
+Return the number of ways to build the array arr under the mentioned conditions. As the answer may grow large, the answer must be computed modulo 109 + 7.
+
+It is a LIS VARIANT not fully similar but to great extent
+
+💡The recursive function solve() explores possible values for each position in the array, checking if it leads to a valid number of comparisons (K). Recursion depth is managed by advancing the index (idx) and updating the comparison score (sc) based on the current maximum value (mv).
+This helps you understand how to prune the search space efficiently by identifying base cases and only considering valid transitions.
+
+
+ 
+class Solution {
+public:
+int N,M,K;
+int mod=1e9+7;
+int dp[101][51][51];
+int solve(int sc,int idx,int mv)
+{
+    //base case
+    if(idx==N)
+    {
+        if(sc==K) return 1;
+        return 0;
+    }
+    if(mv!=-1 && dp[mv][idx][sc]!=-1) return dp[mv][idx][sc];
+    int result=0;
+    for(int i=1;i<=M;i++)
+    {
+        if(i>mv) result=(result+solve(sc+1,idx+1,i))%mod;
+        else result=(result+solve(sc,idx+1,mv))%mod;
+    }
+    return dp[mv][idx][sc]=result%mod;
+}
+    int numOfArrays(int n, int m, int k) {
+        N=n;
+        M=m;
+        K=k;
+        memset(dp,-1,sizeof dp);
+       return solve(0,0,-1);
+    }
+};
