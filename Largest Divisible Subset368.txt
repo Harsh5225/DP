@@ -1,0 +1,48 @@
+1.track of maximum sum(LIS a/c to question) along with index. 
+2.Track the parents 
+3. Utilising the maximum sum index to start printing  the largest divisible subset
+4.Use of LIS concept
+
+
+
+
+
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        int n=nums.size();
+        sort(nums.begin(),nums.end());
+        vector<int>maxLis(nums.size(),1);
+        vector<int>parent(nums.size(),-1);
+        int maxl=1;
+        int last_index=0;
+        for(int i=1;i<n;i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(nums[i]%nums[j]==0)
+                {
+                    if(maxLis[j]+1>maxLis[i])
+                    {
+                        maxLis[i]=maxLis[j]+1;
+                        parent[i]=j;
+                    }
+                    if(maxLis[i]>maxl)
+                    {
+                        maxl=maxLis[i];
+                         last_index=i;
+                    }
+                }
+            }
+        }
+        vector<int>ans;
+       int i= last_index;
+        while(i!=-1)
+        {
+            ans.push_back(nums[i]);
+            i=parent[i];
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
